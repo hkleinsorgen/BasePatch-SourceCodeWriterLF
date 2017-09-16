@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<st-source>
+<!-- 
+Name: BasePatch-SourceCodeWriterLF
+Comment: Write parcel source with line end LF instead of CR
+KSignature: #('definedClasses' 0 'definedClassesHash' 0 'extendedClasses' 1 'extendedClassesHash' 0)
+KSignatureV2: #('definedClasses' 0 'definedClassesHash' 1245845410931227995499360226027473197403882391305 'extendedClasses' 1 'extendedClassesHash' 1212538839481984065653277646205461871382225267649)
+PackageName: BasePatch-SourceCodeWriterLF
+Parcel: #('BasePatch-SourceCodeWriterLF')
+ParcelDirectory: e:\develop\git\BasePatch-SourceCodeWriterLF\BasePatch-SourceCodeWriterLF
+Version: (7.10).1
+Date: 1:30:59 PM September 16, 2017
+ -->
+<time-stamp>From VisualWorks®, 8.1.1 of 10. März 2016 on 16. September 2017 at 13:30:59</time-stamp>
+
+
+<do-it>(Dialog confirm: 'You are filing-in a Parcel source file!\\While this is possible it will not have\the same effect as loading the parcel.\None of the Parcel''s prerequisites will\be loaded and none of its load actions\will be performed.\\Are you sure you want to file-in?' withCRs) ifFalse: [self error: 'Parcel file-in abandoned.  Choose terminate or close.']</do-it>
+
+<methods>
+<class-id>Kernel.SourceCodeStream class</class-id> <category>instance creation</category>
+
+<body package="BasePatch-SourceCodeWriterLF">internalWithEncoding: anEncoding	"Answer a SourceCodeStream on an internal stream that writes a ByteArray.	 Note that clients must access the underlying stream before the SourceCodeStream	 is closed, and that the underlying stream's contents cannot be accessed directly.	 Instead clients must access the contents from the encoded stream's stream. e.g.		| fileManager actualStream |		fileManager := SourceCodeStream internalWithEncoding: #Source.		actualStream := fileManager targetFile stream.		[fileManager timeStamp.		 SourceCodeStream fileOutSourceOn: fileManager]			ensure: [fileManager close].		actualStream contents asString"	| stream |	stream := (ByteArray new withEncoding: anEncoding) writeStream.	stream lineEndLF.	^self on: stream.</body>
+
+<body package="BasePatch-SourceCodeWriterLF">write: aFilename encoding: encodingName	| theFilename stream |	theFilename := aFilename asFilename.	stream := (theFilename withEncoding: encodingName) writeStream.	theFilename hasSourceExtension ifTrue: [stream lineEndLF].	^self on: stream</body>
+
+<body package="BasePatch-SourceCodeWriterLF">writeSourceFile: aFilename	| stream |	stream := (aFilename asFilename withEncoding: #UTF_8) writeStream.	stream lineEndLF.	^(self on: stream)		sourceFormatter: SourceFileManager default systemFormatter</body>
+</methods>
+
+<do-it>"Imported Classes:"</do-it>
+
+<do-it>self error: 'Attempting to file-in parcel imports.  Choose terminate or close'</do-it>
+
+</st-source>
